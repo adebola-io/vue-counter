@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+      <style>
+         html,
+         body {
+            height: 100%;
+         }
+         body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+         }
+         #app {
+            height: 75vh;
+            width: 75vw;
+            max-height: 500px;
+            max-width: 500px;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="app">{{ count }}</div>
+
+      <script type="importmap">
+         {
+            "imports": {
+               "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            }
+         }
+      </script>
+      <script type="module">
+         import { createApp } from "vue";
+         createApp({
+            name: "App",
+            data() {
+               return {
+                  count: 0,
+               };
+            },
+         }).mount("#app");
+      </script>
+   </body>
+</html>
