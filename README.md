@@ -10,8 +10,9 @@ This app was built so I could learn:
 4. Reactive Variables and Objects in Vue with `ref()` and `reactive()`.
 5. Using Typescript in Vue Components.
 6. The `nextTick()` function in Vue.
-7. Vue directives like `v-for`, `v-on` and the shortcuts like `:key` and `@click`.
-8. How to create an infinite sequence with Generators. (The generator has to be assigned. It won't work if its not assigned.)
+7. `v-model` input bindings
+8. Vue directives like `v-for`, `v-on` and the shortcuts like `:key` and `@click`.
+9. How to create an infinite sequence with Generators. (The generator has to be assigned. It won't work if its not assigned.)
 
 To edit the counter, clone the repository and install dependencies with
 

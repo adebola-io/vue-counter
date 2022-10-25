@@ -4,7 +4,7 @@ import type { Modal } from "../utils";
 const props = defineProps<{
       type: Modal["type"];
       name: string | null;
-      "initial-value": number;
+      initValue: number;
    }>(),
    emit = defineEmits<{
       (event: "cancel"): void;
@@ -14,7 +14,7 @@ const computedName = computed(() =>
    props.name ? `"${props.name}"` : "Counter"
 );
 
-const num = ref(props["initial-value"]);
+const num = ref(props.type === "set-to" ? props.initValue : 0);
 
 function onCancel() {
    emit("cancel");
@@ -26,22 +26,21 @@ function onSubmit() {
 
 <template>
    <div class="modal-container">
-      <div class="modal">
+      <form class="modal" @submit.prevent="onSubmit">
          <h1 class="modal-heading">Set New Value for {{ computedName }}</h1>
-         <form @submit.prevent="onSubmit">
-            <input class="modal-input" v-model="num" type="number" />
-            <div class="modal-button-row">
-               <button
-                  @click="onCancel"
-                  class="modal-cancel-button"
-                  type="button"
-               >
-                  Cancel
-               </button>
-               <button class="modal-done-button" type="submit">Done</button>
-            </div>
-         </form>
-      </div>
+         <input
+            title="Enter Value"
+            class="modal-input"
+            v-model="num"
+            type="number"
+         />
+         <div class="modal-button-row">
+            <button @click="onCancel" class="modal-cancel-button" type="button">
+               Cancel
+            </button>
+            <button class="modal-done-button" type="submit">Done</button>
+         </div>
+      </form>
    </div>
 </template>
 
@@ -50,32 +49,77 @@ function onSubmit() {
    position: fixed;
    top: 0;
    left: 0;
-   z-index: 99;
+   z-index: 8;
    height: 100vh;
    width: 100vw;
-   background: gray;
    display: flex;
    justify-content: center;
    align-items: center;
 }
+.modal-container::before {
+   position: absolute;
+   display: block;
+   content: "";
+   top: 0;
+   width: 100%;
+   height: 100%;
+   background-color: black;
+   opacity: 0.4;
+}
 .modal {
+   z-index: 1;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
    height: 40%;
    width: 40%;
    max-width: 650px;
    max-height: 500px;
    min-width: 300px;
    min-height: 200px;
+   padding: 2%;
    background-color: white;
    border-radius: 2rem;
+   animation: modal 400ms;
 }
+
 .modal-heading {
-   margin-left: 3%;
    font-size: 1.5rem;
+   margin-bottom: 7%;
+}
+.modal-input {
+   height: 50px;
+   width: 100%;
+   max-width: 400px;
+   border-radius: 0.7rem;
+   border: 2px solid #756dc3;
+   padding-left: 2%;
+   font-size: 16pt;
 }
 .modal-button-row {
    display: flex;
    justify-content: space-around;
    align-items: center;
-   width: 100%;
+   width: 70%;
+   margin-top: 7%;
+}
+.modal-button-row button {
+   padding: 15px 30px;
+   border-radius: 1rem;
+   transition-duration: 400ms;
+}
+.modal-cancel-button {
+   color: #ff2a2a;
+   border: 2px solid #ff2a2a;
+}
+.modal-cancel-button:hover {
+   color: white;
+   background-color: #ff2a2a;
+}
+.modal-done-button {
+   background-color: #756dc3;
+   color: white;
+   border: 2px solid #756dc3;
 }
 </style>

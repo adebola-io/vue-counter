@@ -12,7 +12,7 @@
          Add New
       </button>
       <button type="button" class="clear-all-button" @click="clearAll">
-         Clear
+         Clear All
       </button>
    </div>
 
@@ -69,13 +69,18 @@ function clearAll() {
    border: 2px solid white;
    background-color: blueviolet;
    color: white;
-   opacity: 0.7;
+   opacity: 0.5;
    transition-duration: 500ms;
 }
 .new-button:hover,
 .clear-all-button:hover {
    transform: scale(1.1);
    opacity: 1;
+}
+
+.clear-all-button {
+   background-color: red;
+   color: white;
 }
 
 .counters {

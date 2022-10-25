@@ -105,7 +105,7 @@ const closeMenu = () => {
       v-if="modalIsOpen"
       :name="counterName"
       :type="modalType"
-      :initial-value="value"
+      :init-value="value"
       @cancel="closeModal"
       @submit="modifyCounter"
    />
@@ -124,6 +124,7 @@ const closeMenu = () => {
    border-radius: 20px;
    border: 2px solid #424242;
    transition-duration: 500ms;
+   animation: counter 400ms;
 }
 
 .container:hover {
