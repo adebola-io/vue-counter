@@ -20,3 +20,8 @@ export function* newNumber() {
       yield i++;
    }
 }
+
+export interface Modal {
+   type: "set-to" | "decrement-by" | "increment-by";
+   open: (as: Modal["type"]) => void;
+}

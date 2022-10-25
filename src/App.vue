@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import Vue, { nextTick, ref } from "vue";
+import { ref } from "vue";
 import AppCounter from "./components/AppCounter.vue";
 import AppFooter from "./components/AppFooter.vue";
 import { newNumber } from "./utils";
@@ -34,9 +34,6 @@ const generator = newNumber();
 
 function createNewCounter() {
    counters.value.push({ id: generator.next().value ?? 0 });
-   nextTick(() => {
-      console.log(counters.value);
-   });
    if (counters.value.length > 3) {
       container.value?.style.setProperty("margin-top", "5%");
    }
@@ -44,9 +41,6 @@ function createNewCounter() {
 
 function deleteCounter(id: number) {
    counters.value = counters.value.filter((i) => i.id !== id);
-   nextTick(() => {
-      console.log(counters.value);
-   });
 }
 
 function clearAll() {

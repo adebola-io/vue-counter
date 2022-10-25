@@ -1,51 +1,78 @@
-<!-- App Counter built with Options API. -->
+<!-- App Counter built with Composition API. -->
 
-<script lang="ts">
-import { Component, defineProps } from "vue";
-const component: Component = {
-   name: "AppCounter",
-   props: {
-      id: Number,
-      colors: Array,
+<script setup lang="ts">
+import { ref } from "vue";
+import { Modal } from "../utils";
+import AppModal from "./AppModal.vue";
+
+const emit = defineEmits<{
+      (event: "delete", id: number): void;
+   }>(),
+   props = defineProps<{
+      id: number;
+   }>();
+
+const value = ref(0),
+   menuIsOpen = ref(false),
+   modalIsOpen = ref(false),
+   modalType = ref<Modal["type"]>("set-to"),
+   counterName = ref<string | null>(null);
+
+type Modifications = {
+   [key in Modal["type"]]: (num: number) => void;
+};
+
+const modifications: Modifications = {
+   "set-to"(num) {
+      value.value = num;
    },
-   data() {
-      return {
-         value: 0,
-         menuIsOpen: false,
-      };
+   "decrement-by"(num) {
+      value.value -= num;
    },
-   emits: ["delete"],
-   setup(props) {},
-   methods: {
-      increment() {
-         this.value++;
-      },
-      decrement() {
-         this.value--;
-      },
-      incrementBy(value: number) {
-         this.value += value;
-      },
-      decrementBy(value: number) {
-         this.value -= value;
-      },
-      toggleOptions() {
-         this.menuIsOpen = !this.menuIsOpen;
-      },
-      resetCounter() {
-         this.value = 0;
-         this.closeMenu();
-      },
-      deleteCounter() {
-         this.$emit("delete", this.id);
-         this.closeMenu();
-      },
-      closeMenu() {
-         this.menuIsOpen = false;
-      },
+   "increment-by"(num) {
+      value.value += num;
    },
 };
-export default component;
+
+const closeMenu = () => {
+      menuIsOpen.value = false;
+   },
+   handleDelete = () => {
+      emit("delete", props.id);
+   },
+   increment = () => {
+      value.value++;
+   },
+   decrement = () => {
+      value.value--;
+   },
+   resetCounter = () => {
+      value.value = 0;
+      closeMenu();
+   },
+   toggleOptions = () => {
+      menuIsOpen.value = !menuIsOpen.value;
+   },
+   closeModal = () => {
+      modalIsOpen.value = false;
+      closeMenu();
+   },
+   openSetToModal = () => {
+      modalType.value = "set-to";
+      modalIsOpen.value = true;
+   },
+   openIncrementModal = () => {
+      modalType.value = "increment-by";
+      modalIsOpen.value = true;
+   },
+   openDecrementModal = () => {
+      modalType.value = "decrement-by";
+      modalIsOpen.value = true;
+   },
+   modifyCounter = (value: number, type: Modal["type"]) => {
+      modifications[type](value);
+      closeModal();
+   };
 </script>
 
 <template>
@@ -60,12 +87,13 @@ export default component;
          <div></div>
          <div></div>
       </div>
+
       <menu class="options" v-if="menuIsOpen">
          <li @click="resetCounter">Reset</li>
-         <li>Set To...</li>
-         <li>Increment By...</li>
-         <li>Decrement By</li>
-         <li @click="deleteCounter">Delete</li>
+         <li @click="openSetToModal">Set To...</li>
+         <li @click="openIncrementModal">Increment By...</li>
+         <li @click="openDecrementModal">Decrement By</li>
+         <li @click="handleDelete">Delete</li>
       </menu>
       <output class="value">{{ value }}</output>
       <div class="button-row">
@@ -73,6 +101,14 @@ export default component;
          <button type="button" @click="increment">+</button>
       </div>
    </div>
+   <AppModal
+      v-if="modalIsOpen"
+      :name="counterName"
+      :type="modalType"
+      :initial-value="value"
+      @cancel="closeModal"
+      @submit="modifyCounter"
+   />
 </template>
 
 <style scoped>
