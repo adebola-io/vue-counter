@@ -120,11 +120,16 @@ const closeMenu = () => {
    flex-direction: column;
    width: 75vw;
    aspect-ratio: 1;
-   max-width: 500px;
+   max-width: var(--max-counter-size);
    border-radius: 20px;
    border: 2px solid #424242;
    transition-duration: 500ms;
    animation: counter 400ms;
+}
+@media (max-width: 500px) {
+   .container {
+      width: 90vw;
+   }
 }
 
 .container:hover {

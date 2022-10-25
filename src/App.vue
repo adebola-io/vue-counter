@@ -34,8 +34,13 @@ const generator = newNumber();
 
 function createNewCounter() {
    counters.value.push({ id: generator.next().value ?? 0 });
-   if (counters.value.length > 3) {
-      container.value?.style.setProperty("margin-top", "5%");
+   if (container.value) {
+      const magicNumber = parseInt(
+         getComputedStyle(container.value).getPropertyValue("--row-num")
+      );
+      if (counters.value.length > magicNumber) {
+         container.value?.style.setProperty("margin-top", "5%");
+      }
    }
 }
 
@@ -86,8 +91,23 @@ function clearAll() {
 .counters {
    display: grid;
    grid: auto/ auto auto auto;
+   --row-num: 3;
+   --max-counter-size: 500px;
    place-items: center;
-   gap: 10px;
+   gap: 30px;
    transition-duration: 500ms;
+}
+@media (max-width: 1200px) {
+   .counters {
+      grid: auto/ auto auto;
+      --row-num: 2;
+      --max-counter-size: 400px;
+   }
+}
+@media (max-width: 500px) {
+   .counters {
+      grid: auto/auto;
+      --row-num: 1;
+   }
 }
 </style>

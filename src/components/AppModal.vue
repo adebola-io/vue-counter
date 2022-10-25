@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import type { Modal } from "../utils";
 const props = defineProps<{
       type: Modal["type"];
@@ -10,9 +10,14 @@ const props = defineProps<{
       (event: "cancel"): void;
       (event: "submit", value: number, type: Modal["type"]): void;
    }>();
-const computedName = computed(() =>
-   props.name ? `"${props.name}"` : "Counter"
-);
+
+const computedName = props.name ? `"${props.name}"` : "Counter";
+
+const headings: { [key in Modal["type"]]: string } = {
+   "set-to": `Set new value for ${computedName}`,
+   "increment-by": `Increase ${computedName} by value`,
+   "decrement-by": `Decrease ${computedName} by value`,
+};
 
 const num = ref(props.type === "set-to" ? props.initValue : 0);
 
@@ -27,7 +32,7 @@ function onSubmit() {
 <template>
    <div class="modal-container">
       <form class="modal" @submit.prevent="onSubmit">
-         <h1 class="modal-heading">Set New Value for {{ computedName }}</h1>
+         <h1 class="modal-heading">{{ headings[type] }}</h1>
          <input
             title="Enter Value"
             class="modal-input"
@@ -87,10 +92,11 @@ function onSubmit() {
 .modal-heading {
    font-size: 1.5rem;
    margin-bottom: 7%;
+   text-align: center;
 }
 .modal-input {
    height: 50px;
-   width: 100%;
+   width: 80%;
    max-width: 400px;
    border-radius: 0.7rem;
    border: 2px solid #756dc3;
@@ -108,6 +114,7 @@ function onSubmit() {
    padding: 15px 30px;
    border-radius: 1rem;
    transition-duration: 400ms;
+   margin-right: 4%;
 }
 .modal-cancel-button {
    color: #ff2a2a;
