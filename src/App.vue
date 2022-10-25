@@ -1,10 +1,18 @@
 <template>
    <div class="counters" ref="container">
-      <AppCounter v-for="counter in counterCount" :key="counter" />
+      <AppCounter
+         v-for="counter in counters"
+         @delete="deleteCounter"
+         :key="counter.id"
+         :id="counter.id"
+      />
    </div>
    <div class="button-container">
       <button type="button" class="new-button" @click="createNewCounter">
          Add New
+      </button>
+      <button type="button" class="clear-all-button" @click="clearAll">
+         Clear
       </button>
    </div>
 
@@ -12,22 +20,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import Vue, { nextTick, ref } from "vue";
 import AppCounter from "./components/AppCounter.vue";
 import AppFooter from "./components/AppFooter.vue";
+import { newNumber } from "./utils";
+interface Counter {
+   id: number;
+}
 
-const counterCount = ref(1);
+const counters = ref<Counter[]>([{ id: 0 }]);
 const container = ref<HTMLElement | null>(null);
+const generator = newNumber();
 
 function createNewCounter() {
-   counterCount.value++;
-   if (counterCount.value > 2) {
-      container.value?.style.setProperty("margin-top", "10%");
+   counters.value.push({ id: generator.next().value ?? 0 });
+   nextTick(() => {
+      console.log(counters.value);
+   });
+   if (counters.value.length > 3) {
+      container.value?.style.setProperty("margin-top", "5%");
    }
+}
+
+function deleteCounter(id: number) {
+   counters.value = counters.value.filter((i) => i.id !== id);
+   nextTick(() => {
+      console.log(counters.value);
+   });
+}
+
+function clearAll() {
+   counters.value = [];
 }
 </script>
 
-<style>
+<style scoped>
 .button-container {
    position: fixed;
    bottom: 0;
@@ -36,9 +63,12 @@ function createNewCounter() {
    justify-content: center;
    align-items: center;
    width: 100%;
+   height: 0px;
 }
-.new-button {
-   margin-bottom: 3%;
+.new-button,
+.clear-all-button {
+   margin-bottom: 200px;
+   margin-inline: 10px;
    padding: 20px 30px;
    border-radius: 17px;
    text-align: center;
@@ -48,7 +78,8 @@ function createNewCounter() {
    opacity: 0.7;
    transition-duration: 500ms;
 }
-.new-button:hover {
+.new-button:hover,
+.clear-all-button:hover {
    transform: scale(1.1);
    opacity: 1;
 }
@@ -58,5 +89,6 @@ function createNewCounter() {
    grid: auto/ auto auto auto;
    place-items: center;
    gap: 10px;
+   transition-duration: 500ms;
 }
 </style>

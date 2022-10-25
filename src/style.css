@@ -6,10 +6,19 @@ body {
    margin: 0;
    display: grid;
    place-items: center;
-   font-family: sans-serif;
+   font-family: "Montserrat", sans-serif;
+   -webkit-font-smoothing: antialiased;
 }
 button {
    cursor: pointer;
    font-family: inherit;
    background-color: transparent;
+}
+menu {
+   margin: 0;
+   padding: 0;
+}
+li {
+   list-style: none;
+   margin: 0;
 }
